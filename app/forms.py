@@ -11,3 +11,4 @@ class LoginForm(FlaskForm): # class inheritance --- super great now
 # need to make a class for pokemon form
 class PokemonForm(FlaskForm): # again class inheritance, keep an eye on it
     pokemon = StringField('Pokemon Name', validators = [DataRequired()])
+    find = SubmitField("Gotta Catch 'em all!")

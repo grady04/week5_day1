@@ -30,12 +30,13 @@ def login():
 def pokemon():
     form = PokemonForm()
     if request.method == 'POST' and form.validate_on_submit():
-        pokemon_name = request.form.get('pokemon_name') # remember property called name in bootstrap
+        pokename = form.pokemon.data.lower()
+        # pokemon_name = request.form.get('pokemon_name') # remember property called name in bootstrap
         
-        url = f'https://pokeapi.co/api/v2/pokemon/{pokemon_name}'
+        url = f'https://pokeapi.co/api/v2/pokemon/{pokename}'
         response = requests.get(url)
 
-        # pokename = form.pokemon.data.lower()
+        
         if not response.ok:
             return "We're Blasting off again!"
         data = response.json()
