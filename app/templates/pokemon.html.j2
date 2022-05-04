@@ -12,9 +12,9 @@ Pokemon Team
 
 <h1>Pokemon Team</h1>
 <form action="{{url_for('pokemon')}}" method="POST">
-  
+
   <div class="mb-3">
-    
+    {{form.pokemon.label(class="form-label")}}
     <label for="pokemon_name" class="form-label">Name?</label>
     <input type="text" name="pokemon_name" class="form-control" id="year">
   </div>
