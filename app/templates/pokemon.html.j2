@@ -11,13 +11,18 @@ Pokemon Team
 {%block content %}
 
 <h1>Pokemon Team</h1>
-<form action="/pokemon" method="POST">
+<form action="{{url_for('pokemon')}}" method="POST">
+  
   <div class="mb-3">
+    
     <label for="pokemon_name" class="form-label">Name?</label>
     <input type="text" name="pokemon_name" class="form-control" id="year">
   </div>
+
   <div style="color:red"><small>{{error}}</small></div>
+
   <button type="submit" class="btn btn-primary">Submit</button>
+
 </form>
 
 
@@ -34,6 +39,7 @@ Pokemon Team
       <th scope="col">defense</th>
     </tr>
   </thead>
+
   <tbody>
     <tr>
       <th scope="row">{{pokedex_entry.name}}</th>
@@ -45,6 +51,7 @@ Pokemon Team
       <td>{{pokedex_entry.defense}}</td>
     </tr>
   </tbody>
+
 </table>
 {% endif %}
 
