@@ -1,7 +1,9 @@
-from flask import render_template, request
-from .forms import LoginForm,PokemonForm
+from flask import render_template, request, flash, redirect, url_for
+from .forms import LoginForm,PokemonForm,RegisterForm
 import requests
 from app import app
+from .models import User
+from flask_login import current_user,logout_user,login_user,login_required
 
 
 
@@ -30,6 +32,25 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
+
+    if request.method == 'POST' and form.validate_on_submit():
+        # all the registration stuff
+        # used try because that's what Kevin did
+        try:
+            new_user_data = {
+                "first_name":form.first_name.data.title(),
+                "last_name":form.last_name.data.title(),
+                "email":form.email.data.lower(),
+                "password":form.password.data
+            }
+
+            new_user_object = User()
+            new_user_object.from_dict(new_user_data)
+            new_user_object.save()
+        
+        except:
+            flash("Error creating account, please try again later", "danger")
+            return render_template("register.html.j2", form=form)
 
 
 
