@@ -15,16 +15,19 @@ def index():
 def login():
     form = LoginForm()
 
-
     if request.method == 'POST' and form.validate_on_submit():
         # all my login stuff
-        email = form.email.data.lower() #form no longer comes from bootstrap
+        email = form.email.data.lower()
         password = form.password.data
-        if email in app.config.get('REGISTERED_USERS') and password == app.config.get('REGISTERED_USERS').get(email).get('password'):
-            # login success
-            return f"Welcome {app.config.get('REGISTERED_USERS').get(email).get('name')}"
-        error_string = "incorrect email or password"
-        return render_template('login.html.j2', error=error_string, form=form)
+
+        # look up user by email address
+        u = User.query.filter_by(email=email).first()
+        if u and u.check_hashed_password(password):
+            login_user(u)
+            flash("Login Success! Get ready to battle!", 'success')
+            return redirect(url_for('index'))
+        flash('Incorrect email, password combo', 'danger')
+        return render_template('login.html.j2', form=form)
 
     return render_template('login.html.j2', form=form)
 
