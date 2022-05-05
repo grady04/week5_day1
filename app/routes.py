@@ -51,6 +51,8 @@ def register():
         except:
             flash("Error creating account, please try again later", "danger")
             return render_template("register.html.j2", form=form)
+        return redirect(url_for("login"))
+    return render_template("register.html.j2", form=form)
 
 
 
