@@ -29,6 +29,15 @@ def login():
     return render_template('login.html.j2', form=form)
 
 
+@app.route('/logout')
+@login_required
+def logout():
+    if current_user:
+        logout_user()
+        flash('You have logged out', 'warning')
+        return redirect(url_for('login'))
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
