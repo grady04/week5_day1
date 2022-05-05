@@ -26,6 +26,14 @@ def login():
 
     return render_template('login.html.j2', form=form)
 
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegisterForm()
+
+
+
+
 @app.route('/pokemon', methods=['GET', 'POST'])
 def pokemon():
     form = PokemonForm()
