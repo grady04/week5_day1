@@ -89,6 +89,9 @@ class User(UserMixin, db.Model):
         self.poketeam.remove(poke)
         db.session.commit()
 
+    def if_caught(self, poke):
+        return poke in self.poketeam
+
     def showteam(self):
         self_pokemon = self.poketeam
         fullteam = Pokemon.query.join(poketeam, (Pokemon.user_id == poketeam.c.user_id)).filter(poketeam.c.poke_id == self.id)

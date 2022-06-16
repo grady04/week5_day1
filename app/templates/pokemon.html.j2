@@ -5,12 +5,12 @@
 {% endblock %}
 
 {% block title %}
-Pokemon Team
+Find Pokemon
 {% endblock %}
 
 {%block content %}
 
-<h1>Pokemon Team</h1>
+<h1>Find Pokemon</h1>
 <form action="{{url_for('poke.pokemon')}}" method="POST">
   {{form.hidden_tag()}}
 
@@ -62,5 +62,6 @@ Pokemon Team
 
 </table>
 {% endif %}
+
 
 {% endblock %}
