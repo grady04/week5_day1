@@ -4,8 +4,9 @@ Login
 {% endblock%}
 {%block content%}
 <h1>Login</h1>
-<form method="POST" action="{{url_for('login')}}">
+<form method="POST" action="{{url_for('auth.login')}}">
     {{form.hidden_tag()}}
+    
     <div>
     {{form.email.label(class = "form-label")}}
     {{form.email(class = "form-control")}}
@@ -13,9 +14,11 @@ Login
         <small style=color:red>{{error}}</small>
     {%endfor%}
     </div>
+
     <div>
     <br>
     </div>
+
     <div>
     {{form.password.label(class = "form-label")}}
     {{form.password(class = "form-control")}}
@@ -23,11 +26,14 @@ Login
         <small style=color:red>{{error}}</small>
     {%endfor%}
     </div>
+
     <div>
     <br>
     </div>
+
     <div>
     {{form.submit(class = "btn btn-primary form-control")}}
     </div>
+
 </form>
 {% endblock%}

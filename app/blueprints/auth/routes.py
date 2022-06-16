@@ -1,17 +1,12 @@
 from flask import render_template, request, flash, redirect, url_for
-from .forms import LoginForm,PokemonForm,RegisterForm
+from .forms import LoginForm,RegisterForm,EditProfileForm
 import requests
-from app import app
-from .models import User
+from .import bp as auth
+from ...models import User
 from flask_login import current_user,logout_user,login_user,login_required
 
 
-
-@app.route('/', methods=['GET'])
-def index():
-    return render_template('index.html.j2')
-
-@app.route('/login', methods=['GET', 'POST'])
+@auth.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
 
@@ -25,23 +20,23 @@ def login():
         if u and u.check_hashed_password(password):
             login_user(u)
             flash("Login Success! Get ready to battle!", 'success')
-            return redirect(url_for('index'))
+            return redirect(url_for('poke.pokemon'))
         flash('Incorrect email, password combo', 'danger')
         return render_template('login.html.j2', form=form)
 
     return render_template('login.html.j2', form=form)
 
 
-@app.route('/logout')
+@auth.route('/logout')
 @login_required
 def logout():
     if current_user:
         logout_user()
         flash('You have logged out', 'warning')
-        return redirect(url_for('login'))
+        return redirect(url_for('auth.login'))
 
 
-@app.route('/register', methods=['GET', 'POST'])
+@auth.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
 
@@ -63,36 +58,29 @@ def register():
         except:
             flash("Error creating account, please try again later", "danger")
             return render_template("register.html.j2", form=form)
-        return redirect(url_for("login"))
+        return redirect(url_for("auth.login"))
     return render_template("register.html.j2", form=form)
 
-
-
-
-@app.route('/pokemon', methods=['GET', 'POST'])
-def pokemon():
-    form = PokemonForm()
-    if request.method == 'POST' and form.validate_on_submit():
-        pokename = form.pokemon.data.lower()
-        # pokemon_name = request.form.get('pokemon_name') # remember property called name in bootstrap
-        
-        url = f'https://pokeapi.co/api/v2/pokemon/{pokename}'
-        response = requests.get(url)
-
-        
-        if not response.ok:
-            return "We're Blasting off again!"
-        data = response.json()
-        pokedex_entry = {
-            "name": data['name'],
-            "base_exp" : data['base_experience'],
-            "sprites": data['sprites']['front_shiny'],
-            "ability": data['abilities'][0]['ability']['name'],
-            "hp": data['stats'][0]['base_stat'],
-            "attack": data['stats'][1]['base_stat'],
-            "defense": data['stats'][2]['base_stat'],
-        }
-        
-        return render_template('pokemon.html.j2', pokedex_entry=pokedex_entry, form=form)
-
-    return render_template('pokemon.html.j2', form=form)
+@auth.route('/edit_profile', methods=['GET','POST'])
+def edit_profile():
+    form = EditProfileForm()
+    if request.method=='POST' and form.validate_on_submit():
+        new_user_data={
+                "first_name":form.first_name.data.title(),
+                "last_name": form.last_name.data.title(),
+                "email":form.email.data.lower(),
+                "password":form.password.data,
+            }
+        user = User.query.filter_by(email=new_user_data["email"]).first()
+        if user and user.email != current_user.email:
+            flash('Email is already in use', 'danger')
+            return redirect(url_for('auth.edit_profile'))
+        try:
+            current_user.from_dict(new_user_data)
+            current_user.save()
+            flash('Profile Updated','success')
+        except:
+            flash('Ther was an unexpected. Please Try again', 'danger')
+            return redirect(url_for('auth.edit_profile'))
+        return redirect(url_for('main.index'))
+    return render_template('register.html.j2', form=form)
