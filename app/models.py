@@ -17,6 +17,7 @@ class User(UserMixin, db.Model):
     last_name = db.Column(db.String)
     password = db.Column(db.String)
     created_on = db.Column(db.DateTime, default=dt.utcnow)
+    favorite = db.Column(db.String, default=None)
     wins = db.Column(db.Integer, default=0)
     losses = db.Column(db.Integer, default=0)
     pokemon = db.relationship(
@@ -82,18 +83,21 @@ class User(UserMixin, db.Model):
         db.session.commit() # saves everything to the db session
 
     def catch_em(self, poke):
-        self.poketeam.append(poke) #interact with the join table
+        self.pokemon.append(poke) #interact with the join table
         db.session.commit() #save to the table
 
     def release(self, poke):
-        self.poketeam.remove(poke)
+        self.pokemon.remove(poke)
         db.session.commit()
 
     def if_caught(self, poke):
-        return poke in self.poketeam
+        return poke in self.pokemon
+
+    def make_favorite(self, poke):
+        self.favorite = poke['favorite']
 
     def showteam(self):
-        self_pokemon = self.poketeam
+        self_pokemon = self.pokemon
         fullteam = Pokemon.query.join(poketeam, (Pokemon.user_id == poketeam.c.user_id)).filter(poketeam.c.poke_id == self.id)
         pokemon_team = fullteam.union(self_pokemon).order_by(Pokemon.name)
         return pokemon_team
@@ -120,12 +124,10 @@ class Pokemon(db.Model):
     def save(self):
         db.session.add(self) #adds the post to the db session
         db.session.commit() #save everything in the session to the db
-
-
-
-
-    
-
+ 
+    def release(self, poke):
+        self.pokemon.remove(poke)
+        db.session.commit()
 
 @login.user_loader
 def load_user(id):

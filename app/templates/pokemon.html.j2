@@ -11,7 +11,7 @@ Find Pokemon
 {%block content %}
 
 <h1>Find Pokemon</h1>
-<form action="{{url_for('poke.pokemon')}}" method="POST">
+<form action="{{url_for('poke.search_pokemon')}}" method="POST">
   {{form.hidden_tag()}}
 
   <div class="mb-3">
@@ -59,6 +59,8 @@ Find Pokemon
       <td>{{pokedex_entry.defense}}</td>
     </tr>
   </tbody>
+
+  <a class="btn btn-primary btn-lg" href="{{url_for('poke.catch_em', name=pokedex_entry.name)}}" role="button">Catch?</a>
 
 </table>
 {% endif %}

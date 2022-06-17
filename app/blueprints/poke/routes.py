@@ -55,11 +55,28 @@ def catch_em(name):
     flash("There was an unexpected error.")
     return redirect(url_for("poke.search_pokemon"))
 
+@poke.route("/release/<string:name>")
+@login_required
+def release(name):
+    poke = Pokemon().query.filter_by(name=name).first()
+    if current_user.if_caught(poke):
+        current_user.release(poke)
+        flash(f"You released {poke.name.title()}.", "success")
+        return redirect(url_for("poke.pokemon_team"))
+
 @poke.route("/pokemonteam")
 @login_required
 def pokemon_team():
     if current_user.pokemon.count() > 0:
-        return render_template('pokemonteam.html.j2')
+        return render_template('pokemonteam.html.j2', pokemon=current_user.pokemon, user=current_user)
     else:
         flash("Go find some pokemon!")
         return redirect(url_for("poke.search_pokemon"))
+
+@poke.route("/make_favorite/<string:name>")
+@login_required
+def make_favorite(name):
+    poke = Pokemon().query.filter_by(name=name).first()
+    if current_user.if_caught(poke):
+        current_user.make_favorite(name)
+

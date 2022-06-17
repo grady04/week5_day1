@@ -20,7 +20,7 @@ def login():
         if u and u.check_hashed_password(password):
             login_user(u)
             flash("Login Success! Get ready to battle!", 'success')
-            return redirect(url_for('poke.pokemon'))
+            return redirect(url_for('poke.search_pokemon'))
         flash('Incorrect email, password combo', 'danger')
         return render_template('login.html.j2', form=form)
 

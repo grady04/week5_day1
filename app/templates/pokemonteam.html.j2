@@ -9,3 +9,12 @@ Pokemon Team
 {% endblock %}
 
 {%block content %}
+    <h1>Your Pokemon Team!</h1>
+    
+    {% if current_user.pokemon %}
+        {% for poke in pokemon%}
+            {% include './includes/teammember.html.j2'%}
+        {% endfor %}
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,17 @@
+<div class="card" style="width: 18rem;">
+        <img src="{{poke.sprite}}" class="card-img-top" alt="...">
+        <div class="card-body">
+        <h5 class="card-title">{{poke.name}}</h5>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+            HP:{{poke.hp}}
+            ATK:{{poke.attack}}
+            DEF:{{poke.defense}}
+            </li>
+        </ul>
+        <div class="card-body">
+            <a href="{{url_for('poke.release', name=poke.name)}}" class="card-link">Release?</a>
+            <a href="#" class="card-link">Make Favorite?</a>
+        </div>
+    </div>
